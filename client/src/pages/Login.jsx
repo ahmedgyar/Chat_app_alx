@@ -11,7 +11,7 @@ const Login = () => {
             <Form.Control type="password" placeholder="Password"/>
             <Button variant="primary" type="submit">Login</Button>
             <Alert variant="danger">
-              {/* <p>An error occured</p> */}
+              <p>An error occured</p>
             </Alert>
           </Stack>
         </Col>

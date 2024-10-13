@@ -1,6 +1,13 @@
 import {Alert, Button, Form, Row, Col, Stack} from "react-bootstrap"
+import { useContext } from "react";
+import { Authcontext, AuthcontextProvider } from "../context/Authcontext";
+
+
 
 const Register = () => {
+
+  const {user} = useContext(Authcontext);
+
   return (
     <Form>
       <Row style={{ height: "100vh", justifyContent: "center", paddingTop: "10%" }}>

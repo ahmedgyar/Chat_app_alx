@@ -60,11 +60,18 @@ export const AuthcontextProvider = ({ children }) => {
     [registerInfo]
   );
 
+<<<<<<< HEAD
 
   const logoutUser = useCallback(() => {
     localStorage.removeItem("user");
     setUser(null);
   }, [])
+=======
+  const logoutUser = useCallback(() => {
+    localStorage.removeItem("User");
+    setUser(null);
+  }, []);
+>>>>>>> 6bef62c (log out)
 
   return (
     <AuthContext.Provider

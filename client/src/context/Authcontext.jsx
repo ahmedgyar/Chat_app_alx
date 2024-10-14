@@ -1,12 +1,12 @@
 import { createContext, useCallback, useState } from "react";
-import { postRequest } from "../utils/services";
+import { postRequest, baseUrl } from "../utils/services";
 
 export const Authcontext = createContext();
 
 export const AuthcontextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [registerError, setregisterError] = useState(null);
-  const [isRegisterLoading, setisRegisterLoading] = useState(false);
+  const [registerError, setRegisterError] = useState(null);
+  const [isRegisterLoading, setIsRegisterLoading] = useState(false);
   const [registerInfo, setRegisterInfo] = useState({
     name: "",
     email: "",
@@ -15,28 +15,38 @@ export const AuthcontextProvider = ({ children }) => {
 
   console.log("registerInfo", registerInfo);
 
+  // Updates registration info with new user input
   const updateRegisterInfo = useCallback((info) => {
-    setRegisterInfo(info);
+    setRegisterInfo((prev) => ({ ...prev, ...info }));
   }, []);
 
-  const registerUser = useCallback(async (e) => {
-    e.preventDefault();
+  // Registers a new user
+  const registerUser = useCallback(
+    async (e) => {
+      e.preventDefault();
 
-    setisRegisterLoading(true);
-    setregisterError(null);
+      setIsRegisterLoading(true);
+      setRegisterError(null);
 
-    const response = await postRequest(`${baseUrl}/users/register`, JSON.stringify(registerInfo));
+      // Make the POST request using the provided `postRequest` utility
+      const response = await postRequest(
+        `${baseUrl}/users/register`,
+        registerInfo
+      );
 
-    setisRegisterLoading(false);
+      setIsRegisterLoading(false);
 
-    if (response.error) {
-      return setregisterError(response);
-    }
+      if (response.error) {
+        setRegisterError(response.message); // Store only the message for easier error display
+        return;
+      }
 
-    localStorage.setItem("user", JSON.stringify(response));
-    setUser(response);
-  }, [registerInfo]);
-
+      // Store user info in local storage and update the user state
+      localStorage.setItem("user", JSON.stringify(response));
+      setUser(response);
+    },
+    [registerInfo]
+  );
 
   return (
     <Authcontext.Provider

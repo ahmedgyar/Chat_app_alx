@@ -14,6 +14,26 @@ export const AuthcontextProvider = ({ children }) => {
   });
 
 
+
+  const [loginError, setLoginError] = useState(null);
+  const [isLoginLoading, setIsLoginLoading] = useState(false);
+  const [loginInfo, setLoginInfo] = useState({
+    email: "",
+    password: "",
+  });
+
+  console.log("User", user);
+  console.log("loginInfo", loginInfo);
+
+
+
+  // const [loginInfo, setLoginInfo] = useState({
+  //   email: "",
+  //   password: "",
+  // });
+
+  
+
   useEffect(() => {
     const user = localStorage.getItem("user"); // Use the same key as used when storing
     if (user) {
@@ -21,7 +41,7 @@ export const AuthcontextProvider = ({ children }) => {
     }
   }, []);
 
-  console.log("User", user);
+ 
 
   
 
@@ -31,6 +51,12 @@ export const AuthcontextProvider = ({ children }) => {
   const updateRegisterInfo = useCallback((info) => {
     setRegisterInfo((prev) => ({ ...prev, ...info }));
   }, []);
+
+
+  const updateLoginInfo = useCallback((info) => {
+    setLoginInfo((prev) => ({ ...prev, ...info }));
+  }, []);
+
 
   // Registers a new user
   const registerUser = useCallback(
@@ -61,6 +87,30 @@ export const AuthcontextProvider = ({ children }) => {
   );
 
 
+  const loginUser = useCallback(async(e) =>{
+
+    e.preventDefault();
+
+    setIsLoginLoading(true);
+    setLoginError(null);
+
+
+    const response = await postRequest(
+      `${baseUrl}/users/login`,
+      loginInfo
+    );
+
+    if (response.error)
+    {
+      return setLoginError(response);
+    }
+
+    localStorage.setItem("User", JSON.stringify(response));
+    setUser(response);
+    setIsLoginLoading(false);
+   }, [loginInfo]); 
+
+
   const logoutUser = useCallback(() => {
     localStorage.removeItem("user");
     setUser(null);
@@ -76,6 +126,11 @@ export const AuthcontextProvider = ({ children }) => {
         registerError,
         isRegisterLoading,
         logoutUser,
+        loginError,
+        loginUser,
+        updateLoginInfo,
+        isLoginLoading,
+        loginInfo,
       }}
     >
       {children}

@@ -1,7 +1,7 @@
 import { createContext, useCallback, useState } from "react";
 import { postRequest, baseUrl } from "../utils/services";
 
-export const Authcontext = createContext();
+export const AuthContext = createContext();
 
 export const AuthcontextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -49,7 +49,7 @@ export const AuthcontextProvider = ({ children }) => {
   );
 
   return (
-    <Authcontext.Provider
+    <AuthContext.Provider
       value={{
         user,
         registerInfo,
@@ -60,6 +60,6 @@ export const AuthcontextProvider = ({ children }) => {
       }}
     >
       {children}
-    </Authcontext.Provider>
+    </AuthContext.Provider>
   );
 };

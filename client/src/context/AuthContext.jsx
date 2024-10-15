@@ -13,8 +13,6 @@ export const AuthcontextProvider = ({ children }) => {
     password: "",
   });
 
-
-
   const [loginError, setLoginError] = useState(null);
   const [isLoginLoading, setIsLoginLoading] = useState(false);
   const [loginInfo, setLoginInfo] = useState({
@@ -25,25 +23,12 @@ export const AuthcontextProvider = ({ children }) => {
   console.log("User", user);
   console.log("loginInfo", loginInfo);
 
-
-
-  // const [loginInfo, setLoginInfo] = useState({
-  //   email: "",
-  //   password: "",
-  // });
-
-  
-
   useEffect(() => {
     const user = localStorage.getItem("user"); // Use the same key as used when storing
     if (user) {
       setUser(JSON.parse(user));
     }
   }, []);
-
- 
-
-  
 
   console.log("registerInfo", registerInfo);
 
@@ -52,11 +37,9 @@ export const AuthcontextProvider = ({ children }) => {
     setRegisterInfo((prev) => ({ ...prev, ...info }));
   }, []);
 
-
   const updateLoginInfo = useCallback((info) => {
     setLoginInfo((prev) => ({ ...prev, ...info }));
   }, []);
-
 
   // Registers a new user
   const registerUser = useCallback(
@@ -86,42 +69,34 @@ export const AuthcontextProvider = ({ children }) => {
     [registerInfo]
   );
 
-<<<<<<< HEAD
+  const loginUser = useCallback(
+    async (e) => {
+      e.preventDefault();
 
-  const loginUser = useCallback(async(e) =>{
+      setIsLoginLoading(true);
+      setLoginError(null);
 
-    e.preventDefault();
+      const response = await postRequest(
+        `${baseUrl}/users/login`,
+        loginInfo
+      );
 
-    setIsLoginLoading(true);
-    setLoginError(null);
+      if (response.error) {
+        setLoginError(response.message);
+        return;
+      }
 
-
-    const response = await postRequest(
-      `${baseUrl}/users/login`,
-      loginInfo
-    );
-
-    if (response.error)
-    {
-      return setLoginError(response);
-    }
-
-    localStorage.setItem("User", JSON.stringify(response));
-    setUser(response);
-    setIsLoginLoading(false);
-   }, [loginInfo]); 
-
+      localStorage.setItem("user", JSON.stringify(response));
+      setUser(response);
+      setIsLoginLoading(false);
+    },
+    [loginInfo]
+  );
 
   const logoutUser = useCallback(() => {
     localStorage.removeItem("user");
     setUser(null);
-  }, [])
-=======
-  const logoutUser = useCallback(() => {
-    localStorage.removeItem("User");
-    setUser(null);
   }, []);
->>>>>>> 6bef62c (log out)
 
   return (
     <AuthContext.Provider
